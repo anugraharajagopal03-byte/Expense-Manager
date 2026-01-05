@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}Expense Tracker{% endblock %}</title>
+
+    <style>
+        /* ================= THEME VARIABLES ================= */
+        :root {
+            --bg-main: #f5f7fb;
+            --bg-card: #ffffff;
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #06b6d4;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-soft: #e5e7eb;
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ================= GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Inter, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-left a,
+        .nav-right a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-right: 25px;
+            position: relative;
+        }
+
+        .nav-left a:last-child {
+            margin-right: 0;
+        }
+
+        .nav-right a {
+            margin-right: 0;
+            font-weight: 600;
+        }
+
+        .nav-left a::after,
+        .nav-right a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0%;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-left a:hover::after,
+        .nav-right a:hover::after {
+            width: 100%;
+        }
+
+        /* ================= CONTAINER ================= */
+        .container {
+            padding: 35px 40px;
+        }
+
+        /* ================= TABLE ================= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-card);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        table th,
+        table td {
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        table th {
+            background-color: #f1f5f9;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        table tr {
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        table tr:last-child {
+            border-bottom: none;
+        }
+
+        table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.25s ease;
+        }
+
+        .btn-add {
+            background-color: var(--success);
+        }
+
+        .btn-edit {
+            background-color: var(--warning);
+        }
+
+        .btn-delete {
+            background-color: var(--danger);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ================= AUTH PAGES ================= */
+        .auth-box {
+            width: 380px;
+            margin: 90px auto;
+            padding: 35px;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            font-size: 14px;
+        }
+
+        .auth-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .auth-box button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-box button:hover {
+            opacity: 0.9;
+        }
+
+        .auth-box a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* ================= FORMS ================= */
+        .form-box {
+            width: 440px;
+            margin: 40px auto;
+            padding: 35px;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-box label {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-box input,
+        .form-box select,
+        .form-box textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            font-size: 14px;
+        }
+
+        .form-box textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-box input:focus,
+        .form-box select:focus,
+        .form-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-box button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .form-box button:hover {
+            opacity: 0.9;
+        }
+
+        .form-box .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-box,
+            .auth-box {
+                width: 95%;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% block navbar %}
+    {% if user.is_authenticated %}
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="{% url 'dashboard' %}">Home</a>
+            <a href="{% url 'add_expense' %}">Add Expense</a>
+        </div>
+
+        <div class="nav-right">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+    {% endblock %}
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
